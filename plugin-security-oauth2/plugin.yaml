@@ -1,0 +1,53 @@
+name: Security
+description: Plugin definido para utilizacao do Log 5W (What, Whom Where, When, Why)
+display-name: Security
+picture: plugin.png
+category: backend # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/plugin/#category
+compatibility:
+  - java
+  - spring
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies: # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/yaml/#technologies
+  - "Api"
+types:
+  - app
+inputs:
+  - label: Pacote para classes de segurança. Ex - br.com.org.projeto.security
+    type: text
+    name: pacote_seguranca   
+
+  - label: Nome da classe para ter o código de configuração
+    type: text
+    name: classe_configuracao
+    default: "OAuthSecurity" 
+
+  - label: Endereço de configuração da JWK
+    type: text
+    name: auth_server_url
+
+
+computedInputs:   
+  "pasta": "src/main/java/{{inputs.pacote_seguranca | replace('.','/')}}"                       
+
+hooks:
+  - type: edit
+    path: src/main/resources/application.yaml
+    trigger: after-render
+    changes:
+      - insert:
+          line: -1
+          snippet: snippets/conf.yml
+
+  - type: edit
+    path: pom.xml
+    trigger: after-render
+    changes:
+      - search:
+          string: "</dependencies>"
+          insert-before:
+            snippet: snippets/spring-oauth-maven.xml
+          when:
+            not-exists-snippet: snippets/spring-oauth-maven.xml

@@ -1,0 +1,8 @@
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: validate
+  #   show-sql: true
+  # datasource:
+  #   url: {{inputs.string_jdbc}}
+  #   username: {{inputs.login}}
+  #   password: {{inputs.senha}}

@@ -17,13 +17,13 @@ technologies: # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/ya
 types:
   - app
 inputs:
-  - label: Login
+  - label: Defina o login para acesso do banco
     type: text
     name: login
-  - label: Senha
+  - label: Defina a senha para acesso do banco
     type: text
     name: senha
-  - label: String de conexão
+  - label: Defina a string de conexão para acesso do banco
     type: text
     name: string_conexao
   - label: Escolha o tipo de banco de dados para sua aplicação
@@ -32,6 +32,13 @@ inputs:
     items:
       - MySQL
       - PostgreSQL
+  - label: Desabilita transacao por default para repositorios
+    type: bool
+    name: desabilita_transacao
+    default: false
+  - label: Nome completo da classe que inicia a aplicação. Ex - br.com.org.projeto.Application
+    type: text
+    name: classe_application        
 
 hooks: 
   - type: edit
@@ -63,3 +70,16 @@ hooks:
             snippet: snippets/postgre.xml
           when:
             not-exists-snippet: snippets/postgre.xml
+
+  - type: edit
+    trigger: after-render
+    path: "src/main/java/{{inputs.classe_applicaion | replace('.','/')}}.java"
+    conditions:
+      variable: desabilita_transacao
+      operator: ==
+      value: true
+    changes:
+      - search: 
+          string: "@SpringBootApplication"
+          insert-before:
+            value: "EnableJpaRepositories(enableDefaultTransactions = false)\n"
