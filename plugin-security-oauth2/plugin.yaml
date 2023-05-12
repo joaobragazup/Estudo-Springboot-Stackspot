@@ -1,5 +1,5 @@
 name: Security
-description: Plugin definido para utilizacao do Log 5W (What, Whom Where, When, Why)
+description: Plugin definido para utilizacao da feature de Security com OAuth2
 display-name: Security
 picture: plugin.png
 category: backend # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/plugin/#category
