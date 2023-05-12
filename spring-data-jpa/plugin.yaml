@@ -1,0 +1,65 @@
+name: spring-data-jpa
+description: Template criado para configurar o banco de dados
+display-name: spring-data-jpa
+picture: plugin.png
+category: backend # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/plugin/#category
+compatibility:
+  - java
+  - spring
+about: docs/about.md
+usage: docs/usage.md
+use-case: docs/use-case.md
+implementation: docs/implementation.md
+technologies: # Ref: https://docs.stackspot.com/docs/create-stacks/yaml-files/yaml/#technologies
+  - "Api"
+  - "Java"
+  - "Springboot"
+types:
+  - app
+inputs:
+  - label: Login
+    type: text
+    name: login
+  - label: Senha
+    type: text
+    name: senha
+  - label: String de conexão
+    type: text
+    name: string_conexao
+  - label: Escolha o tipo de banco de dados para sua aplicação
+    type: text
+    name: driver
+    items:
+      - MySQL
+      - PostgreSQL
+
+hooks: 
+  - type: edit
+    trigger: after-render
+    path: pom.xml
+    conditions:
+      variable: driver
+      operator: ==
+      value: MySQL
+    changes:
+      - search: 
+          string: </dependencies>
+          insert-before:
+            snippet: snippets/mysql.xml
+          when:
+            not-exists-snippet: snippets/mysql.xml
+
+  - type: edit
+    trigger: after-render
+    path: pom.xml
+    conditions:
+      variable: driver
+      operator: ==
+      value: PostgreSQL
+    changes:
+      - search: 
+          string: </dependencies>
+          insert-before:
+            snippet: snippets/postgre.xml
+          when:
+            not-exists-snippet: snippets/postgre.xml
